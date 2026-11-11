@@ -27,7 +27,7 @@
   --color-surface-hover: #e9e3dd; /* 233,227,221：hover 底 */
   --color-line-strong: #d3c7bc; /* 211,199,188：較深細線 */
   --color-link: #354966; /* 53,73,102：文字連結 */
-  --color-error: #ba7e7d; /* 186,126,125：錯誤提示（待確認） */
+  --color-error: #ba7e7d; /* 186,126,125：錯誤提示（乾燥玫瑰，使用者 2026-11-11 確認） */
 
   /* 字型：英數 Author 在前，中文落到思源黑體（Noto Sans TC） */
   --font-sans: var(--font-author), var(--font-noto-tc), sans-serif;
