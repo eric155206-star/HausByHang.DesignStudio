@@ -4,34 +4,39 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ContactCta } from "@/components/layout/ContactCta";
 import { Badge } from "@/components/ui/Badge";
-import { categoryLabel, getProject, projects } from "@/content/projects";
+import { categoryLabel } from "@/content/projects";
+import { getPublishedProject, getPublishedProjects } from "@/lib/data/projects";
 
-export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const projects = await getPublishedProjects();
+  // Cache Components 規定至少要回傳一組參數；還沒有作品時給一個不存在的 slug，頁面會顯示 404
+  return projects.length ? projects.map((p) => ({ slug: p.slug })) : [{ slug: "_" }];
 }
 
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getPublishedProject(slug);
   if (!project) return {};
   return {
     title: project.title,
-    description: project.summary,
+    description: project.summary || project.description,
     openGraph: { images: [{ url: (project.hero ?? project.cover).src }] },
   };
 }
 
 export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getPublishedProject(slug);
   if (!project) notFound();
 
-  const [main, ...rest] = project.gallery;
+  // 主圖：第一張橫式照片；其他照片進照片牆
+  const main = project.gallery.find((g) => g.width > g.height) ?? project.gallery[0];
+  const rest = project.gallery.filter((g) => g !== main);
   const meta = [
     { k: "地點", v: project.location },
     { k: "類型", v: [categoryLabel[project.category], ...project.tags].join(" · ") },
     { k: "坪數", v: project.area ? `${project.area} 坪` : "—" },
-    { k: "完工", v: String(project.year) },
+    { k: "完工", v: project.year ? String(project.year) : "—" },
   ];
 
   return (
@@ -42,10 +47,10 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         </Link>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-col gap-3">
-            <div className="eyebrow">{project.eyebrow}</div>
+            {project.eyebrow && <div className="eyebrow">{project.eyebrow}</div>}
             <h1 className="text-[clamp(36px,5.5vw,72px)] tracking-[0.02em]">{project.title}</h1>
           </div>
-          <Badge>{project.year}</Badge>
+          {project.year && <Badge>{project.year}</Badge>}
         </div>
         {main && (
           <div className="relative aspect-[3/2] overflow-hidden bg-warm-gray">
@@ -55,7 +60,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
       </section>
 
       <section className="container-page grid items-start gap-[clamp(32px,6vw,96px)] py-[clamp(40px,6vw,80px)] md:grid-cols-2">
-        <p className="text-[clamp(18px,2vw,22px)] font-light leading-[1.9] text-black text-pretty">{project.summary}</p>
+        <p className="text-[clamp(18px,2vw,22px)] font-light leading-[1.9] text-black text-pretty">{project.description}</p>
         <dl className="border-t border-warm-gray">
           {meta.map((m) => (
             <div key={m.k} className="flex justify-between gap-6 border-b border-surface-hover py-[13px] text-sm">

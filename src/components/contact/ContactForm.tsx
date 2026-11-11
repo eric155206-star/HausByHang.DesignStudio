@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useActionState, useEffect, useRef, type ReactNode } from "react";
-import { submitInquiry } from "@/app/contact/actions";
+import { submitInquiry } from "@/app/(site)/contact/actions";
 import { Button } from "@/components/ui/Button";
 import {
   budgets,
