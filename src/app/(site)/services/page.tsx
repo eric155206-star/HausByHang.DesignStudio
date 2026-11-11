@@ -4,18 +4,22 @@ import { ContactCta } from "@/components/layout/ContactCta";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { services, servicesIntro } from "@/content/services";
+import { getSiteImages } from "@/lib/data/site-images";
 
 export const metadata: Metadata = {
   title: "服務項目",
   description: "住宅室內設計、商業空間設計與老屋翻新。",
 };
 
-export default function Page() {
+export default async function Page() {
+  const siteImages = await getSiteImages();
   return (
     <>
       <PageHeader eyebrow="Services" title="服務項目" aside={servicesIntro} />
       <section className="container-page pb-[clamp(56px,8vw,112px)]">
-        {services.map((s) => (
+        {services.map((s) => {
+          const image = siteImages[s.slot] ?? s.image;
+          return (
           <article
             key={s.num}
             className="grid items-start gap-x-[clamp(32px,5vw,72px)] gap-y-6 border-t border-warm-gray py-[clamp(32px,4vw,56px)] md:grid-cols-2 lg:grid-cols-3"
@@ -36,8 +40,8 @@ export default function Page() {
               </div>
             </div>
             <div className="relative aspect-[4/3] overflow-hidden bg-surface md:col-span-2 lg:col-span-1">
-              {s.image ? (
-                <Image src={s.image.src} alt={s.image.alt} fill sizes="(min-width: 1024px) 360px, 100vw" className="object-cover" />
+              {image ? (
+                <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 360px, 100vw" className="object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center">
                   <Image src="/brand/mark.png" alt="" width={40} height={40} className="opacity-[0.09]" />
@@ -46,7 +50,8 @@ export default function Page() {
               )}
             </div>
           </article>
-        ))}
+          );
+        })}
       </section>
       <ContactCta />
     </>
