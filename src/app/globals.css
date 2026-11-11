@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/*
+ * haus by hang. 沆設計 — Design tokens
+ *
+ * 色票全部取自沆設計 CIS 手冊：
+ *   標準色 p.22：白、黑、WARM GRAY C、PANTONE 7529 C
+ *   延伸用色 p.26：內文棕、輔助灰棕、淺底、連結深藍、乾燥玫瑰
+ * 元件只能使用這裡定義的 token 名稱，不可寫死色碼。
+ * 下面先清空 Tailwind 內建色盤，CIS 以外的顏色（例如 bg-red-500）會直接無效。
+ */
+@theme {
+  --color-*: initial;
+
+  /* 標準色（手冊 p.22） */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-warm-gray: #ded3c9; /* WARM GRAY C：Header 底、分隔線、佔位底 */
+  --color-taupe: #bdac9c; /* PANTONE 7529 C：Header 下緣線、強調 */
+
+  /* 延伸用色（手冊 p.26） */
+  --color-ink: #291d11; /* 41,29,17：內文 */
+  --color-ink-2: #433629; /* 67,54,41：次要文字 */
+  --color-ink-3: #7e6e60; /* 126,110,96：輔助文字 */
+  --color-ink-4: #9d8d7d; /* 157,141,125：淡字、流程編號 */
+  --color-surface: #f4f1ee; /* 244,241,238：淺底 */
+  --color-surface-hover: #e9e3dd; /* 233,227,221：hover 底 */
+  --color-line-strong: #d3c7bc; /* 211,199,188：較深細線 */
+  --color-link: #354966; /* 53,73,102：文字連結 */
+  --color-error: #ba7e7d; /* 186,126,125：錯誤提示（待確認） */
+
+  /* 字型：英數 Author 在前，中文落到思源黑體（Noto Sans TC） */
+  --font-sans: var(--font-author), var(--font-noto-tc), sans-serif;
+
+  /* 動態 */
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* 陰影：只用在 Header 捲動狀態 */
+  --shadow-header: 0 2px 12px rgb(0 0 0 / 0.08);
+}
+
+/* 版面容器：內容最大寬 1280px，左右留白 clamp(20px, 5vw, 64px) */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+/* 英文小標：全大寫、字距 0.16em */
+@utility eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-black);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  ::selection {
+    background: var(--color-warm-gray);
+    color: var(--color-black);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: 2px;
+  }
+}
