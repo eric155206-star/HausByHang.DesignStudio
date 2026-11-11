@@ -9,7 +9,7 @@ export const spaceTypes = ["住宅", "商業空間"] as const;
 export const houseConditions = ["新成屋", "毛胚屋", "中古屋", "老屋", "預售屋"] as const;
 export const houseTypes = ["公寓", "華廈", "電梯大樓", "透天厝", "店面", "辦公室", "其他"] as const;
 /** 預算從 150 萬起（使用者 2026-11-11 指定） */
-export const budgets = ["150–300 萬", "300–500 萬", "500–800 萬", "800 萬以上", "尚未確定"] as const;
+export const budgets = ["150–300 萬", "300–500 萬", "500–800 萬", "800 萬以上"] as const;
 
 /** 去掉空白、橫線、括號後，接受台灣手機（09 開頭 10 碼）與市話（區碼＋7–8 碼），可用 +886 開頭。 */
 const TW_PHONE = /^(?:\+?886|0)(?:9\d{8}|[2-8]\d{7,8})$/;
