@@ -29,7 +29,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
   const project = await getPublishedProject(slug);
   if (!project) notFound();
 
-  const [main, ...rest] = project.gallery;
+  // 主圖：第一張橫式照片；其他照片進照片牆
+  const main = project.gallery.find((g) => g.width > g.height) ?? project.gallery[0];
+  const rest = project.gallery.filter((g) => g !== main);
   const meta = [
     { k: "地點", v: project.location },
     { k: "類型", v: [categoryLabel[project.category], ...project.tags].join(" · ") },

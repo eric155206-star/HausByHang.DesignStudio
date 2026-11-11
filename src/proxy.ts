@@ -32,7 +32,8 @@ export async function proxy(request: NextRequest) {
   if (!signedIn && !isLogin) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
-  if (signedIn && isLogin) {
+  // 登入了但沒有權限（?error=forbidden）時留在登入頁，讓使用者看到原因並登出，避免來回導向
+  if (signedIn && isLogin && !request.nextUrl.searchParams.has("error")) {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
   return response;
