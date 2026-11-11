@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <>
       <PageHeader eyebrow="Journal" title="文章" />
-      <Placeholder>文章列表將在後台完成後加入</Placeholder>
+      <Placeholder>第一篇文章正在撰寫中，敬請期待。</Placeholder>
       <ContactCta />
     </>
   );
