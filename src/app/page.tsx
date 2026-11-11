@@ -5,11 +5,13 @@ import { SectionHeading } from "@/components/layout/SectionHeading";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { processSteps } from "@/content/process";
-import { categoryLabel, projects } from "@/content/projects";
+import { categoryLabel } from "@/content/projects";
+import { getPublishedProjects } from "@/lib/data/projects";
 import { services } from "@/content/services";
 import { contactHref, site } from "@/lib/site";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const projects = await getPublishedProjects();
   const featured = projects.filter((p) => p.featured).slice(0, 3);
   const heroProject = featured.find((p) => p.hero) ?? projects.find((p) => p.hero);
 
