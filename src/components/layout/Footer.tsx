@@ -18,9 +18,9 @@ export function Footer() {
             <Image
               src={logo}
               alt="沆・設計 haus by hang."
-              className="self-start mix-blend-multiply"
-              style={{ height: 72, width: "auto", margin: "-10px -18px" }}
-              sizes="156px"
+              className="self-start"
+              style={{ height: 40, width: "auto", maxWidth: "none" }}
+              sizes="126px"
             />
             <p className="text-[14.5px] leading-[1.8] text-ink-2">
               {site.tagline}
