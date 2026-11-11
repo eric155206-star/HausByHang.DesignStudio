@@ -16,8 +16,12 @@ export async function requireAdmin() {
   const email = data?.claims?.email as string | undefined;
   if (!email) redirect("/admin/login");
 
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) redirect("/admin/login?error=forbidden");
+  const { data: isAdmin, error } = await supabase.rpc("is_admin");
+  if (error) console.error("[requireAdmin] is_admin 查詢失敗", error.message);
+  if (!isAdmin) {
+    console.warn("[requireAdmin] 不在白名單", { email, isAdmin });
+    redirect("/admin/login?error=forbidden");
+  }
 
   return { supabase, email };
 }
