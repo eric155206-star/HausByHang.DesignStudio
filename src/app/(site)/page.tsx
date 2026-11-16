@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { ContactCta } from "@/components/layout/ContactCta";
 import { SectionHeading } from "@/components/layout/SectionHeading";
@@ -7,9 +7,42 @@ import { ButtonLink } from "@/components/ui/Button";
 import { processSteps } from "@/content/process";
 import { categoryLabel } from "@/content/projects";
 import { getPublishedProjects } from "@/lib/data/projects";
-import { getSiteImages } from "@/lib/data/site-images";
+import { getSiteImages, type SiteImage } from "@/lib/data/site-images";
 import { services } from "@/content/services";
 import { contactHref, site } from "@/lib/site";
+
+/**
+ * 首頁主視覺。後台有另外裁手機版時用 <picture> 做「藝術指導」：
+ * 手機載入 4:3 那張、平板以上載入 2:1 那張，瀏覽器只會下載用得到的那一張。
+ */
+function HeroImage({ image }: { image: SiteImage }) {
+  const className = "absolute inset-0 h-full w-full object-cover";
+  if (!image.mobile) {
+    return <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />;
+  }
+  const { props: desktop } = getImageProps({
+    src: image.src,
+    alt: image.alt,
+    width: image.width,
+    height: image.height,
+    sizes: "(min-width: 1280px) 1152px, 100vw",
+  });
+  const { props: mobile } = getImageProps({
+    src: image.mobile.src,
+    alt: image.alt,
+    width: image.mobile.width,
+    height: image.mobile.height,
+    sizes: "100vw",
+    priority: true,
+  });
+  return (
+    <picture>
+      <source media="(min-width: 768px)" srcSet={desktop.srcSet} sizes={desktop.sizes} />
+      {/* 這裡用原生 img：srcSet 由 getImageProps 產生，仍然走 Next.js 的圖片最佳化 */}
+      <img {...mobile} alt={image.alt} className={className} style={undefined} />
+    </picture>
+  );
+}
 
 export default async function HomePage() {
   const [projects, siteImages] = await Promise.all([getPublishedProjects(), getSiteImages()]);
@@ -24,14 +57,7 @@ export default async function HomePage() {
       {customHero ? (
         <section className="container-page pt-[clamp(28px,4vw,48px)]">
           <div className="relative aspect-[4/3] overflow-hidden bg-warm-gray md:aspect-[2/1]">
-            <Image
-              src={customHero.src}
-              alt={customHero.alt}
-              fill
-              priority
-              sizes="(min-width: 1280px) 1152px, 100vw"
-              className="object-cover"
-            />
+            <HeroImage image={customHero} />
           </div>
         </section>
       ) : (

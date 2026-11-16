@@ -13,8 +13,18 @@ export default async function SiteImagesPage({ searchParams }: PageProps<"/admin
   const tab: SiteImageTab = siteImageTabs.some((t) => t.key === rawTab) ? (rawTab as SiteImageTab) : "home";
 
   const { supabase } = await requireAdmin();
-  const { data, error } = await supabase.from("site_images").select("slot, image_path, alt_text");
-  const bySlot = new Map((data ?? []).map((r) => [r.slot, { url: publicImageUrl(r.image_path), alt: r.alt_text }]));
+  const { data, error } = await supabase.from("site_images").select("slot, image_path, alt_text, original_path");
+  const bySlot = new Map(
+    (data ?? []).map((r) => [
+      r.slot,
+      {
+        url: publicImageUrl(r.image_path),
+        alt: r.alt_text,
+        // 加入裁切功能前上傳的照片沒有原圖，重新裁切時拿現有的圖當來源
+        originalPath: r.original_path ?? r.image_path,
+      },
+    ]),
+  );
   const slots = siteImageSlots.filter((s) => s.tab === tab);
 
   return (
@@ -40,7 +50,7 @@ export default async function SiteImagesPage({ searchParams }: PageProps<"/admin
         ))}
       </nav>
 
-      {error && <p className="text-sm text-error">讀取失敗：{error.message}（如果是剛更新，請確認網站圖片的 SQL 已執行）</p>}
+      {error && <p className="text-sm text-error">讀取失敗：{error.message}（如果是剛更新，請確認網站圖片的 SQL 都已執行）</p>}
 
       <div className={cn("grid gap-5", tab === "home" ? "" : "md:grid-cols-2 lg:grid-cols-3")}>
         {slots.map((s) => {

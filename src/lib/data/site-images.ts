@@ -8,7 +8,14 @@ import { createPublicClient } from "@/lib/supabase/public";
  */
 export const SITE_IMAGES_TAG = "site-images";
 
-export type SiteImage = { src: string; alt: string; width: number; height: number };
+export type SiteImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** 手機版裁切（有另外裁才有） */
+  mobile?: { src: string; width: number; height: number };
+};
 
 export async function getSiteImages(): Promise<Record<string, SiteImage>> {
   "use cache";
@@ -18,7 +25,7 @@ export async function getSiteImages(): Promise<Record<string, SiteImage>> {
   if (!supabaseConfigured) return {};
   const { data, error } = await createPublicClient()
     .from("site_images")
-    .select("slot, image_path, alt_text, width, height");
+    .select("slot, image_path, alt_text, width, height, mobile_image_path, mobile_width, mobile_height");
   if (error) {
     console.error(`讀取網站圖片失敗：${error.message}`);
     return {};
@@ -26,7 +33,16 @@ export async function getSiteImages(): Promise<Record<string, SiteImage>> {
   return Object.fromEntries(
     data.map((row) => [
       row.slot,
-      { src: publicImageUrl(row.image_path), alt: row.alt_text, width: row.width, height: row.height },
+      {
+        src: publicImageUrl(row.image_path),
+        alt: row.alt_text,
+        width: row.width,
+        height: row.height,
+        mobile:
+          row.mobile_image_path && row.mobile_width && row.mobile_height
+            ? { src: publicImageUrl(row.mobile_image_path), width: row.mobile_width, height: row.mobile_height }
+            : undefined,
+      },
     ]),
   );
 }
