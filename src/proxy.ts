@@ -10,8 +10,10 @@ import { supabaseConfigured, supabasePublishableKey, supabaseUrl } from "@/lib/s
  */
 export async function proxy(request: NextRequest) {
   const isLogin = request.nextUrl.pathname === "/admin/login";
+  // 設定密碼頁：邀請信、重設密碼信的落地頁，還沒登入也要能打開
+  const isSetPassword = request.nextUrl.pathname === "/admin/set-password";
   if (!supabaseConfigured) {
-    return isLogin ? NextResponse.next() : NextResponse.redirect(new URL("/admin/login", request.url));
+    return isLogin || isSetPassword ? NextResponse.next() : NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   let response = NextResponse.next({ request });
@@ -29,7 +31,7 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims);
 
-  if (!signedIn && !isLogin) {
+  if (!signedIn && !isLogin && !isSetPassword) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
   // 登入了但沒有權限（?error=forbidden）時留在登入頁，讓使用者看到原因並登出，避免來回導向

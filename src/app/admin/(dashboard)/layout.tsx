@@ -19,6 +19,9 @@ export default function DashboardLayout({ children }: LayoutProps<"/admin">) {
               <Link href="/admin/site-images" className="hover:text-black">
                 網站圖片
               </Link>
+              <Link href="/admin/members" className="hover:text-black">
+                成員
+              </Link>
             </nav>
           </div>
           <div className="flex items-center gap-4 text-ink-2">
