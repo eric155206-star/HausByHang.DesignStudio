@@ -7,14 +7,18 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type LoginState = { error?: string; email?: string };
 
+/** 公司網域的帳號可以只打 @ 前面那段，例如 admin 代表 admin@hausbyhang.com */
+const ACCOUNT_DOMAIN = "hausbyhang.com";
+
 export async function signIn(_prev: LoginState, formData: FormData): Promise<LoginState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const typed = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
-  if (!email || !password) return { error: "請輸入 Email 與密碼", email };
+  if (!typed || !password) return { error: "請輸入帳號與密碼", email: typed };
+  const email = typed.includes("@") ? typed : `${typed}@${ACCOUNT_DOMAIN}`;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: "Email 或密碼不正確", email };
+  if (error) return { error: "帳號或密碼不正確", email: typed };
 
   redirect("/admin");
 }
