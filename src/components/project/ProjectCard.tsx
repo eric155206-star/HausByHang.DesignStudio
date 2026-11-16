@@ -4,7 +4,7 @@ import { categoryLabel, type Project } from "@/content/projects";
 
 /** 作品卡片：4:5 封面、名稱、地點 · 類型（· 坪數）、年份。 */
 export function ProjectCard({ project, showArea = false }: { project: Project; showArea?: boolean }) {
-  const meta = [project.location, categoryLabel[project.category], ...project.tags];
+  const meta = [project.location, categoryLabel[project.category], ...project.tags].filter(Boolean);
   if (showArea && project.area) meta.push(`${project.area} 坪`);
 
   return (
@@ -23,7 +23,7 @@ export function ProjectCard({ project, showArea = false }: { project: Project; s
           <div className="text-lg text-black">{project.title}</div>
           <div className="text-[13px] text-ink-3">{meta.join(" · ")}</div>
         </div>
-        <div className="text-[13px] text-ink-4 tabular-nums">{project.year}</div>
+        {project.year && <div className="text-[13px] text-ink-4 tabular-nums">{project.year}</div>}
       </div>
     </Link>
   );

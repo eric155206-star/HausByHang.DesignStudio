@@ -5,18 +5,37 @@ import { SectionHeading } from "@/components/layout/SectionHeading";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { processSteps } from "@/content/process";
-import { categoryLabel, projects } from "@/content/projects";
+import { categoryLabel } from "@/content/projects";
+import { getPublishedProjects } from "@/lib/data/projects";
+import { getSiteImages } from "@/lib/data/site-images";
 import { services } from "@/content/services";
 import { contactHref, site } from "@/lib/site";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [projects, siteImages] = await Promise.all([getPublishedProjects(), getSiteImages()]);
+  // 後台「網站圖片」有設定首頁主視覺時優先使用，否則用精選作品的主圖
+  const customHero = siteImages["home-hero"];
   const featured = projects.filter((p) => p.featured).slice(0, 3);
   const heroProject = featured.find((p) => p.hero) ?? projects.find((p) => p.hero);
 
   return (
     <>
       {/* 1. 主視覺 */}
-      {heroProject?.hero && (
+      {customHero ? (
+        <section className="container-page pt-[clamp(28px,4vw,48px)]">
+          <div className="relative aspect-[4/3] overflow-hidden bg-warm-gray md:aspect-[2/1]">
+            <Image
+              src={customHero.src}
+              alt={customHero.alt}
+              fill
+              priority
+              sizes="(min-width: 1280px) 1152px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </section>
+      ) : (
+        heroProject?.hero && (
         <section className="container-page pt-[clamp(28px,4vw,48px)]">
           <Link
             href={`/projects/${heroProject.slug}`}
@@ -39,6 +58,7 @@ export default function HomePage() {
             <span>{heroProject.location}</span>
           </div>
         </section>
+        )
       )}
 
       {/* 2. 標語 */}

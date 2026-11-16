@@ -1,6 +1,6 @@
 /**
- * 作品資料（暫存）。欄位對齊規格文件的 projects / project_images 資料表，
- * 第 4 步接上 Supabase 後，改由後台管理，頁面版型不用重做。
+ * 作品資料型別，以及 Supabase 尚未設定時使用的暫存資料。
+ * 設定好 Supabase 後，前台改讀資料庫（見 src/lib/data/projects.ts），這裡的資料就不再顯示。
  *
  * 只放真實案例：設計稿裡的「山居．白水」「餘白咖啡」等是假資料，不放上正式網站。
  */
@@ -29,8 +29,12 @@ export type Project = {
   tags: string[];
   /** 坪數，未提供時為 null */
   area: number | null;
-  year: number;
+  year: number | null;
+  /** 卡片與 SEO 用短述 */
   summary: string;
+  /** 作品內頁的案例描述 */
+  description: string;
+  /** 卡片封面（4:5 裁切顯示，寬高可為 0） */
   cover: ProjectImage;
   /** 首頁主視覺用的橫幅圖 */
   hero?: ProjectImage;
@@ -58,7 +62,8 @@ export const projects: Project[] = [
     tags: [],
     area: null,
     year: 2026,
-    summary:
+    summary: "以低色溫的燈光與木質家具，串起客廳、餐廳與廚房。",
+    description:
       "以低色溫的燈光與木質家具，串起客廳、餐廳與廚房。軌道燈保留日後調整的彈性，讓空間隨著屋主的生活習慣，慢慢長出自己的樣子。",
     cover: sanmin("04", 579, H, "封面"),
     hero: sanmin("12", W, H, "餐廳望向客廳"),
@@ -82,6 +87,3 @@ export const projects: Project[] = [
   },
 ];
 
-export function getProject(slug: string) {
-  return projects.find((p) => p.slug === slug);
-}

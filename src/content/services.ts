@@ -3,6 +3,8 @@
  * 「建築規劃」已確認不提供，不要加入。
  */
 export type Service = {
+  /** 對應後台「網站圖片」的位置代碼（src/lib/site-images.ts） */
+  slot: string;
   num: string;
   name: string;
   en: string;
@@ -10,7 +12,7 @@ export type Service = {
   short: string;
   body: string;
   items: string[];
-  /** 示意照片，沒有時顯示佔位 */
+  /** 預設示意照片；後台有上傳時以後台為準，兩者都沒有時顯示佔位 */
   image?: { src: string; alt: string };
 };
 
@@ -18,6 +20,7 @@ export const servicesIntro = "從住宅到商業空間，我們從使用者的�
 
 export const services: Service[] = [
   {
+    slot: "service-residential",
     num: "01",
     name: "住宅室內設計",
     en: "Residential Interior",
@@ -27,6 +30,7 @@ export const services: Service[] = [
     image: { src: "/projects/banqiao-sanmin/07.jpg", alt: "住宅室內設計 — 板橋三民路" },
   },
   {
+    slot: "service-commercial",
     num: "02",
     name: "商業空間設計",
     en: "Commercial Space",
@@ -35,6 +39,7 @@ export const services: Service[] = [
     items: ["餐飲", "零售", "診所", "辦公室"],
   },
   {
+    slot: "service-renovation",
     num: "03",
     name: "老屋翻新",
     en: "Renovation",
