@@ -41,7 +41,7 @@ export default async function Page() {
             </div>
             <div className="relative aspect-[4/3] overflow-hidden bg-surface md:col-span-2 lg:col-span-1">
               {image ? (
-                <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 360px, 100vw" className="object-cover" />
+                <Image src={image.src} alt={image.alt} fill quality={90} sizes="(min-width: 1024px) 360px, 100vw" className="object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center">
                   <Image src="/brand/mark.png" alt="" width={40} height={40} className="opacity-[0.09]" />

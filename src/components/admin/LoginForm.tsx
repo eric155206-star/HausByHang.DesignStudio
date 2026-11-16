@@ -41,8 +41,8 @@ export function LoginForm() {
         </p>
       )}
       <label className="flex flex-col gap-2 text-sm">
-        Email
-        <input name="email" type="email" autoComplete="email" defaultValue={state.email} required className={adminInput} />
+        帳號或 Email
+        <input name="email" type="text" inputMode="email" autoCapitalize="none" autoComplete="username" defaultValue={state.email} required className={adminInput} />
       </label>
       <label className="flex flex-col gap-2 text-sm">
         密碼
