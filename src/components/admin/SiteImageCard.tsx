@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { removeSiteImage, saveSiteImageAlt, setSiteImage } from "@/app/admin/(dashboard)/site-images/actions";
 import { Button } from "@/components/ui/Button";
-import { cropImage, loadImage, resizeImage, type PixelArea } from "@/lib/admin/resize";
+import { cropImage, loadImage, ORIGINAL_MAX_EDGE, resizeImage, type PixelArea } from "@/lib/admin/resize";
 import { cn } from "@/lib/cn";
 import type { SiteImageSlot } from "@/lib/site-images";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -49,7 +49,7 @@ export function SiteImageCard({
     setStatus(null);
     setUploading(true);
     try {
-      const { blob } = await resizeImage(file);
+      const { blob } = await resizeImage(file, { maxEdge: ORIGINAL_MAX_EDGE, quality: 0.95 });
       setSource({ url: URL.createObjectURL(blob), blob, path: null });
     } catch (e) {
       fail(e, "照片讀取失敗");
@@ -142,7 +142,7 @@ export function SiteImageCard({
 
       <div className={cn("relative overflow-hidden bg-surface", slot.aspect)}>
         {image ? (
-          <Image src={image.url} alt={image.alt} fill sizes="600px" className="object-cover" />
+          <Image src={image.url} alt={image.alt} fill quality={90} sizes="(min-width: 1024px) 1100px, 100vw" className="object-cover" />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-ink-4">尚未設定</div>
         )}

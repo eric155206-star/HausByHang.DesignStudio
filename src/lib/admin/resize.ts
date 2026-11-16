@@ -5,9 +5,15 @@
  */
 export const MAX_EDGE = 2400;
 
-export async function resizeImage(file: File): Promise<{ blob: Blob; width: number; height: number }> {
+/** 要拿來裁切的原圖留大一點、壓縮輕一點：放大裁切時才有足夠像素，也避免壓兩次造成的畫質損失。 */
+export const ORIGINAL_MAX_EDGE = 4800;
+
+export async function resizeImage(
+  file: File,
+  { maxEdge = MAX_EDGE, quality = 0.86 }: { maxEdge?: number; quality?: number } = {},
+): Promise<{ blob: Blob; width: number; height: number }> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-  const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+  const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
   const width = Math.round(bitmap.width * scale);
   const height = Math.round(bitmap.height * scale);
 
@@ -20,7 +26,7 @@ export async function resizeImage(file: File): Promise<{ blob: Blob; width: numb
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
 
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.86));
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
   if (!blob) throw new Error("照片轉檔失敗");
   return { blob, width, height };
 }
@@ -44,7 +50,7 @@ export async function cropImage(
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(source, area.x, area.y, area.width, area.height, 0, 0, width, height);
 
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
   if (!blob) throw new Error("照片裁切失敗");
   return { blob, width, height };
 }

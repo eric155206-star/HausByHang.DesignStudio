@@ -18,7 +18,7 @@ import { contactHref, site } from "@/lib/site";
 function HeroImage({ image }: { image: SiteImage }) {
   const className = "absolute inset-0 h-full w-full object-cover";
   if (!image.mobile) {
-    return <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />;
+    return <Image src={image.src} alt={image.alt} fill priority quality={90} sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />;
   }
   const { props: desktop } = getImageProps({
     src: image.src,
@@ -26,6 +26,7 @@ function HeroImage({ image }: { image: SiteImage }) {
     width: image.width,
     height: image.height,
     sizes: "(min-width: 1280px) 1152px, 100vw",
+    quality: 90,
   });
   const { props: mobile } = getImageProps({
     src: image.mobile.src,
@@ -33,6 +34,7 @@ function HeroImage({ image }: { image: SiteImage }) {
     width: image.mobile.width,
     height: image.mobile.height,
     sizes: "100vw",
+    quality: 90,
     priority: true,
   });
   return (

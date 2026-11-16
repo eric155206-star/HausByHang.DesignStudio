@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/Button";
 import type { PixelArea } from "@/lib/admin/resize";
 import type { SiteImageCrop } from "@/lib/site-images";
 
+/** 裁出來的寬度低於這個數字，在電腦大圖或高解析度手機上會開始看得出模糊 */
+const MIN_CROP_WIDTH = 1600;
+
 /**
  * 裁切視窗：依序框出每個版本（例如電腦版、手機版）要顯示的範圍。
  * 拖曳移動、滑桿或滾輪縮放；裁切框比例鎖定成前台顯示的比例。
@@ -32,6 +35,8 @@ export function CropDialog({
 
   const crop = crops[step];
   const last = step === crops.length - 1;
+  // 框到的範圍太小，放到大螢幕會糊，先提醒
+  const tooSmall = !!current && current.width < MIN_CROP_WIDTH;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onCancel();
@@ -108,6 +113,13 @@ export function CropDialog({
             className="flex-1 accent-black"
           />
         </label>
+
+        {current && (
+          <p role="status" className={tooSmall ? "text-xs text-error" : "text-xs text-ink-3"}>
+            裁切後 {Math.round(current.width)} × {Math.round(current.height)} px
+            {tooSmall && "，放大太多了，網站上可能會模糊。建議縮小一點，或換一張解析度更高的照片。"}
+          </p>
+        )}
 
         <div className="flex flex-wrap justify-end gap-2">
           <Button size="sm" variant="ghost" onClick={onCancel}>
