@@ -16,6 +16,9 @@ export default function DashboardLayout({ children }: LayoutProps<"/admin">) {
               <Link href="/admin/projects" className="hover:text-black">
                 作品
               </Link>
+              <Link href="/admin/posts" className="hover:text-black">
+                文章
+              </Link>
               <Link href="/admin/site-images" className="hover:text-black">
                 網站圖片
               </Link>

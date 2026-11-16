@@ -90,3 +90,81 @@
     outline-offset: 2px;
   }
 }
+
+/* 文章內文排版。前台文章頁與後台編輯器共用，寫的時候看到的就是發佈後的樣子。 */
+@layer components {
+  .post-body {
+    font-size: 16.5px;
+    line-height: 2;
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+  .post-body > * + * {
+    margin-top: 1.4em;
+  }
+  .post-body h2 {
+    margin-top: 2.2em;
+    font-size: clamp(22px, 2.4vw, 28px);
+    line-height: 1.4;
+  }
+  .post-body h3 {
+    margin-top: 1.8em;
+    font-size: clamp(18px, 2vw, 21px);
+    line-height: 1.5;
+  }
+  .post-body > :first-child {
+    margin-top: 0;
+  }
+  .post-body ul,
+  .post-body ol {
+    padding-left: 1.5em;
+  }
+  .post-body ul {
+    list-style: disc;
+  }
+  .post-body ol {
+    list-style: decimal;
+  }
+  .post-body li + li {
+    margin-top: 0.4em;
+  }
+  .post-body li > p {
+    margin: 0;
+  }
+  .post-body blockquote {
+    border-left: 2px solid var(--color-taupe);
+    padding-left: 1.2em;
+    color: var(--color-ink-2);
+  }
+  .post-body a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .post-body hr {
+    border: 0;
+    border-top: 1px solid var(--color-warm-gray);
+    margin-block: 2.4em;
+  }
+  .post-body img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    background: var(--color-surface);
+  }
+  /* 編輯器：游標所在的圖片加外框，空白時顯示提示字 */
+  .post-body.ProseMirror {
+    min-height: 420px;
+    outline: none;
+  }
+  .post-body.ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid var(--color-link);
+  }
+  .post-body.ProseMirror > p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: var(--color-ink-4);
+    pointer-events: none;
+  }
+}
