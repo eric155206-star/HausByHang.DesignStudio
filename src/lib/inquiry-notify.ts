@@ -22,6 +22,7 @@ export function inquiryRows(q: Inquiry): [string, string][] {
     ["LINE ID", q.lineId],
     ["Email", q.email],
     ["空間類型", q.spaceType],
+    ["營業類型", q.businessType],
     ["房屋現況", q.houseCondition],
     ["房屋類型", q.houseType],
     ["屋齡", q.houseAge === null ? null : `${q.houseAge} 年`],

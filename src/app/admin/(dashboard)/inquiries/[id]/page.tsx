@@ -15,7 +15,7 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
   const { data: q } = await supabase
     .from("inquiries")
     .select(
-      "id, name, phone, line_id, email, space_type, house_condition, house_type, house_age, region, area_ping, budget, message, status, admin_note, notified_at, created_at",
+      "id, name, phone, line_id, email, space_type, business_type, house_condition, house_type, house_age, region, area_ping, budget, message, status, admin_note, notified_at, created_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -26,6 +26,7 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
     { k: "LINE ID", v: q.line_id },
     { k: "Email", v: q.email, href: q.email ? `mailto:${q.email}` : undefined },
     { k: "空間類型", v: q.space_type },
+    { k: "營業類型", v: q.business_type },
     { k: "房屋現況", v: q.house_condition },
     { k: "房屋類型", v: q.house_type },
     { k: "屋齡", v: q.house_age === null ? null : `${q.house_age} 年` },

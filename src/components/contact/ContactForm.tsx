@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useRef, type ReactNode } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { submitInquiry } from "@/app/(site)/contact/actions";
 import { Button } from "@/components/ui/Button";
 import {
   budgets,
-  houseConditions,
+  businessTypes,
+  houseConditionsFor,
   houseTypes,
   spaceTypes,
   type InquiryField,
@@ -21,6 +22,9 @@ const inputClass =
 export function ContactForm() {
   const [state, action, pending] = useActionState<InquiryState, FormData>(submitInquiry, { status: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
+  // 這兩題會決定後面出現哪些題目，所以要即時記住選了什麼
+  const [spaceType, setSpaceType] = useState("");
+  const [businessType, setBusinessType] = useState("");
 
   // 送出失敗時，把游標移到第一個有錯的欄位（手機上會自動捲過去）
   useEffect(() => {
@@ -81,21 +85,67 @@ export function ContactForm() {
         </Field>
       </div>
 
-      <ChoiceGroup label="空間類型" required name="spaceType" options={spaceTypes} value={val.spaceType} error={err.spaceType} />
-      <ChoiceGroup label="房屋現況" required name="houseCondition" options={houseConditions} value={val.houseCondition} error={err.houseCondition} />
+      <ChoiceGroup
+        label="空間類型"
+        required
+        name="spaceType"
+        options={spaceTypes}
+        value={spaceType}
+        error={err.spaceType}
+        onSelect={(v) => {
+          setSpaceType(v);
+          setBusinessType("");
+        }}
+      />
+
+      {spaceType === "商業空間" && (
+        <>
+          <ChoiceGroup
+            label="營業類型"
+            required
+            name="businessType"
+            options={businessTypes}
+            value={businessType}
+            error={err.businessType}
+            onSelect={setBusinessType}
+          />
+          {businessType === "其他" && (
+            <Field label="請填寫營業類型" required name="businessTypeOther" error={err.businessTypeOther}>
+              <input {...field("businessTypeOther")} placeholder="例如 美容工作室" className={inputClass} />
+            </Field>
+          )}
+        </>
+      )}
+
+      {/* 選了空間類型才出現；key 讓切換類型時重新開始，不會留著另一類的選項 */}
+      {spaceType && (
+        <ChoiceGroup
+          key={spaceType}
+          label="房屋現況"
+          required
+          name="houseCondition"
+          options={houseConditionsFor(spaceType)}
+          value={val.spaceType === spaceType ? val.houseCondition : undefined}
+          error={err.houseCondition}
+        />
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="房屋類型" name="houseType" error={err.houseType}>
-          <select {...field("houseType")} className={inputClass}>
-            <option value="">請選擇</option>
-            {houseTypes.map((o) => (
-              <option key={o}>{o}</option>
-            ))}
-          </select>
-        </Field>
-        <Field label="屋齡（年）" name="houseAge" error={err.houseAge}>
-          <input {...field("houseAge")} inputMode="numeric" className={inputClass} />
-        </Field>
+        {spaceType && (
+          <>
+            <Field label="房屋類型" name="houseType" error={err.houseType}>
+              <select {...field("houseType")} className={inputClass}>
+                <option value="">請選擇</option>
+                {houseTypes.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="屋齡（年）" name="houseAge" error={err.houseAge}>
+              <input {...field("houseAge")} inputMode="numeric" className={inputClass} />
+            </Field>
+          </>
+        )}
         <Field label="地區" required name="region" error={err.region}>
           <input {...field("region")} placeholder="例如 新北 板橋" className={inputClass} />
         </Field>
@@ -181,6 +231,7 @@ function ChoiceGroup({
   required,
   error,
   hint,
+  onSelect,
 }: {
   label: string;
   name: InquiryField;
@@ -189,6 +240,7 @@ function ChoiceGroup({
   required?: boolean;
   error?: string;
   hint?: string;
+  onSelect?: (value: string) => void;
 }) {
   return (
     <fieldset className="flex flex-col gap-2.5" aria-describedby={error ? `e-${name}` : undefined}>
@@ -200,7 +252,10 @@ function ChoiceGroup({
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
           <label key={o} className="cursor-pointer">
-            <input type="radio" name={name} value={o} defaultChecked={value === o} className="peer sr-only" />
+            <input type="radio" name={name} value={o} defaultChecked={value === o}
+              onChange={onSelect && (() => onSelect(o))}
+              className="peer sr-only"
+            />
             <span className="inline-flex rounded-full border border-line-strong px-3.5 py-1.5 text-[13.5px] text-ink transition-colors hover:border-ink-3 peer-checked:border-black peer-checked:bg-black peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-link">
               {o}
             </span>
