@@ -16,6 +16,7 @@ import {
 } from "@/lib/inquiry";
 import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
+import logo from "../../../public/brand/logo-bilingual.png";
 
 const inputClass =
   "w-full rounded-[4px] border border-line-strong bg-white px-3.5 py-2.5 text-[15px] text-black placeholder:text-ink-4 transition-colors focus:border-black focus:outline-none aria-[invalid=true]:border-error";
@@ -37,12 +38,9 @@ export function ContactForm() {
   if (state.status === "success") {
     return (
       <div role="status" className="flex flex-col items-start gap-5 py-6">
-        <Image src="/brand/mark.png" alt="" width={44} height={44} />
+        <Image src={logo} alt="沆・設計 haus by hang." style={{ height: 44, width: "auto", maxWidth: "none" }} sizes="140px" />
         <h2 className="text-2xl">謝謝您的來信</h2>
         <p className="text-[15px] leading-[1.9] text-ink-2">我們會在兩個工作天內與您聯繫。</p>
-        <Button variant="secondary" onClick={() => window.location.reload()}>
-          再填一份
-        </Button>
       </div>
     );
   }
