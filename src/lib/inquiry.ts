@@ -15,6 +15,10 @@ export const houseConditionsFor = (spaceType: string): readonly string[] =>
 /** 商業空間才需要選的營業類型；選「其他」時另外手動填寫 */
 export const businessTypes = ["餐廳", "零售", "百貨櫃位", "辦公空間", "其他"] as const;
 export const houseTypes = ["公寓", "華廈", "電梯大樓", "透天厝", "店面", "辦公室", "其他"] as const;
+/** 住宅只列住宅會有的類型；商業空間才有店面、辦公室、其他 */
+export const residentialHouseTypes = ["公寓", "華廈", "電梯大樓", "透天厝"] as const;
+export const houseTypesFor = (spaceType: string): readonly string[] =>
+  spaceType === "住宅" ? residentialHouseTypes : houseTypes;
 /** 預算從 150 萬起，級距每 100 萬一級（使用者 2026-11-19 指定） */
 export const budgets = ["150–250 萬", "250–350 萬", "350–450 萬", "450 萬以上"] as const;
 
@@ -79,6 +83,9 @@ export const inquirySchema = z
   consent: z.literal("on", { error: "請勾選同意個人資料告知事項" }),
   })
   .superRefine((q, ctx) => {
+    if (q.houseType && !houseTypesFor(q.spaceType).includes(q.houseType)) {
+      ctx.addIssue({ code: "custom", path: ["houseType"], message: "房屋類型選項不正確" });
+    }
     if (q.spaceType !== "商業空間") return;
     if (!q.businessType) {
       ctx.addIssue({ code: "custom", path: ["businessType"], message: "請選擇營業類型" });

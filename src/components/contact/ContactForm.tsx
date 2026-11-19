@@ -9,7 +9,7 @@ import {
   businessTypes,
   regions,
   houseConditionsFor,
-  houseTypes,
+  houseTypesFor,
   spaceTypes,
   type InquiryField,
   type InquiryState,
@@ -135,9 +135,14 @@ export function ContactForm() {
         {spaceType && (
           <>
             <Field label="房屋類型" name="houseType" error={err.houseType}>
-              <select {...field("houseType")} className={inputClass}>
+              <select
+                {...field("houseType")}
+                key={spaceType}
+                defaultValue={val.spaceType === spaceType ? val.houseType ?? "" : ""}
+                className={inputClass}
+              >
                 <option value="">請選擇</option>
-                {houseTypes.map((o) => (
+                {houseTypesFor(spaceType).map((o) => (
                   <option key={o}>{o}</option>
                 ))}
               </select>
