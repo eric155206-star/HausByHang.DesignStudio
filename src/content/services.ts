@@ -26,7 +26,7 @@ export const services: Service[] = [
     en: "Residential Interior",
     short: "從家人的作息出發，規劃動線、收納與光線，讓家跟著生活一起長大。",
     body: "從家人的作息出發，梳理動線、收納與採光。我們重視每個角落實際被使用的方式，讓空間在日常中自然運作，並保留隨家庭階段調整的彈性。",
-    items: ["新成屋", "中古屋", "預售屋客變"],
+    items: ["新成屋", "老屋", "預售屋客變"],
     image: { src: "/projects/banqiao-sanmin/07.jpg", alt: "住宅室內設計 — 板橋三民路" },
   },
   {
