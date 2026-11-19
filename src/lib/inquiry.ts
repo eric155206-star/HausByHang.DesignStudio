@@ -18,6 +18,9 @@ export const houseTypes = ["公寓", "華廈", "電梯大樓", "透天厝", "店
 /** 預算從 150 萬起，級距每 100 萬一級（使用者 2026-11-19 指定） */
 export const budgets = ["150–250 萬", "250–350 萬", "350–450 萬", "450 萬以上"] as const;
 
+/** 服務範圍只有雙北與桃園（使用者 2026-11-19 指定） */
+export const regions = ["台北市", "新北市", "桃園市"] as const;
+
 /** 去掉空白、橫線、括號後，接受台灣手機（09 開頭 10 碼）與市話（區碼＋7–8 碼），可用 +886 開頭。 */
 const TW_PHONE = /^(?:\+?886|0)(?:9\d{8}|[2-8]\d{7,8})$/;
 
@@ -69,7 +72,7 @@ export const inquirySchema = z
     .union([z.literal(""), z.enum(houseTypes)], { error: "房屋類型選項不正確" })
     .transform((v) => v || null),
   houseAge: optionalNumber("屋齡", 150),
-  region: z.string().trim().min(1, "請填寫地區，例如 新北 板橋").max(50),
+  region: choice(regions, "請選擇地區"),
   area: optionalNumber("坪數", 2000),
   budget: choice(budgets, "請選擇預算區間"),
   message: optionalText(2000),

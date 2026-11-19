@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import {
   budgets,
   businessTypes,
+  regions,
   houseConditionsFor,
   houseTypes,
   spaceTypes,
@@ -146,13 +147,12 @@ export function ContactForm() {
             </Field>
           </>
         )}
-        <Field label="地區" required name="region" error={err.region}>
-          <input {...field("region")} placeholder="例如 新北 板橋" className={inputClass} />
-        </Field>
         <Field label="約略坪數" name="area" error={err.area}>
           <input {...field("area")} inputMode="decimal" className={inputClass} />
         </Field>
       </div>
+
+      <ChoiceGroup label="地區" required name="region" options={regions} value={val.region} error={err.region} />
 
       <ChoiceGroup label="預算區間" required name="budget" options={budgets} value={val.budget} error={err.budget} hint="含設計與工程" />
 
