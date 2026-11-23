@@ -14,6 +14,7 @@ export function ProjectCard({ project, showArea = false }: { project: Project; s
           src={project.cover.src}
           alt={project.cover.alt}
           fill
+          quality={90}
           sizes="(min-width: 1280px) 400px, (min-width: 768px) 33vw, 100vw"
           className="object-cover transition-transform duration-[720ms] ease-brand group-hover:scale-[1.03]"
         />

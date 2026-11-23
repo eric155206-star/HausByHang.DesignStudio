@@ -130,7 +130,7 @@ export function PostEditor({ post }: { post: PostEditorValues }) {
     setImageBusy(true);
     setState({ status: "idle" });
     try {
-      const { blob, width, height } = await resizeImage(file, { quality: 0.9 });
+      const { blob, width, height } = await resizeImage(file);
       const path = await uploadPostImage(post.id, blob);
       const alt = prompt("這張圖片的說明（給搜尋引擎和看不到圖的人，可留空）", "") ?? "";
       editor

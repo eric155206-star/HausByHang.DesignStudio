@@ -75,6 +75,7 @@ export default async function HomePage() {
               alt={heroProject.hero.alt}
               fill
               priority
+              quality={90}
               sizes="(min-width: 1280px) 1152px, 100vw"
               className="object-cover transition-transform duration-[720ms] ease-brand group-hover:scale-[1.02]"
             />

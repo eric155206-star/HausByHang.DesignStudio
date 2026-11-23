@@ -54,7 +54,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         </div>
         {main && (
           <div className="relative aspect-[3/2] overflow-hidden bg-warm-gray">
-            <Image src={main.src} alt={main.alt} fill priority sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />
+            <Image src={main.src} alt={main.alt} fill priority quality={90} sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />
           </div>
         )}
       </section>
@@ -81,6 +81,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                 alt={img.alt}
                 width={img.width}
                 height={img.height}
+                quality={90}
                 sizes="(min-width: 1280px) 576px, (min-width: 640px) 50vw, 100vw"
                 className="mb-[clamp(16px,2vw,28px)] block h-auto w-full break-inside-avoid bg-warm-gray"
               />
