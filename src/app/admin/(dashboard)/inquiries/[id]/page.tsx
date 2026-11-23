@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { InquiryStatusForm } from "@/components/admin/InquiryStatusForm";
 import { requireAdmin } from "@/lib/admin/auth";
 import { formatTaipei, isInquiryStatus } from "@/lib/inquiry-status";
+import { INQUIRY_UPLOADS_BUCKET, questionnaireRows } from "@/lib/questionnaire";
+import { adminKeyConfigured, createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "詢問單內容" };
 
@@ -15,11 +17,22 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
   const { data: q } = await supabase
     .from("inquiries")
     .select(
-      "id, name, phone, line_id, email, space_type, business_type, house_condition, house_type, house_age, region, area_ping, budget, message, status, admin_note, notified_at, created_at",
+      "id, name, phone, line_id, email, space_type, business_type, house_condition, house_type, house_age, region, area_ping, budget, message, status, admin_note, notified_at, created_at, questionnaire, reference_images, questionnaire_at",
     )
     .eq("id", id)
     .maybeSingle();
   if (!q) notFound();
+
+  const answers = questionnaireRows(q.questionnaire);
+  // 參考圖放在不公開的空間，這裡產生一小時內有效的連結給後台看
+  const paths: string[] = q.reference_images ?? [];
+  let images: string[] = [];
+  if (paths.length && adminKeyConfigured) {
+    const { data } = await createSupabaseAdminClient()
+      .storage.from(INQUIRY_UPLOADS_BUCKET)
+      .createSignedUrls(paths, 60 * 60);
+    images = (data ?? []).flatMap((d) => (d.signedUrl ? [d.signedUrl] : []));
+  }
 
   const rows: { k: string; v: string | null; href?: string }[] = [
     { k: "電話", v: q.phone, href: `tel:${q.phone}` },
@@ -75,6 +88,46 @@ export default async function InquiryPage({ params }: PageProps<"/admin/inquirie
             <p className="whitespace-pre-wrap text-[15px] leading-[1.9] text-black">
               {q.message || <span className="text-ink-4">未填</span>}
             </p>
+          </div>
+
+          <div className="flex flex-col gap-3 border-t border-line-strong pt-5">
+            <h2 className="text-sm text-ink-3">
+              詳細問卷{q.questionnaire_at && `（${formatTaipei(q.questionnaire_at)} 填寫）`}
+            </h2>
+            {answers.length === 0 ? (
+              <p className="text-sm text-ink-4">
+                {q.space_type === "住宅" ? "客人沒有填寫問卷。" : "商業空間不需要填寫問卷。"}
+              </p>
+            ) : (
+              <dl className="flex flex-col gap-4">
+                {answers.map(([k, v]) => (
+                  <div key={k} className="flex flex-col gap-1">
+                    <dt className="text-xs text-ink-3">{k}</dt>
+                    <dd className="whitespace-pre-wrap text-[15px] leading-[1.8] text-black">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {paths.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <h3 className="text-xs text-ink-3">參考圖（點圖看大圖，連結一小時內有效）</h3>
+                {images.length ? (
+                  <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {images.map((src, n) => (
+                      <li key={src} className="aspect-square overflow-hidden bg-warm-gray">
+                        <a href={src} target="_blank" rel="noreferrer">
+                          {/* 限時連結每次不同，不適合經過 next/image 快取 */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={src} alt={`參考圖 ${n + 1}`} loading="lazy" className="h-full w-full object-cover" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-error">參考圖暫時讀不到，請重新整理再試。</p>
+                )}
+              </div>
+            )}
           </div>
         </section>
 

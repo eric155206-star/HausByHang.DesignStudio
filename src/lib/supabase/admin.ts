@@ -4,7 +4,7 @@ import { supabaseUrl } from "./config";
 
 /**
  * 最高權限的 Supabase client（secret key，會略過 RLS）。
- * 只能在伺服器端、而且已經用 requireAdmin() 確認過身分之後使用；目前只用在成員邀請與移除。
+ * 只能在伺服器端使用：後台動作要先用 requireAdmin() 確認身分；前台只有詢問表單（存檔、問卷、參考圖上傳許可）會用到。
  * 金鑰放在 Vercel 環境變數 SUPABASE_SECRET_KEY，沒有 NEXT_PUBLIC_ 前綴，瀏覽器拿不到。
  */
 export const adminKeyConfigured = Boolean(supabaseUrl && process.env.SUPABASE_SECRET_KEY);

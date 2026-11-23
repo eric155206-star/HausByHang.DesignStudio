@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { submitInquiry } from "@/app/(site)/contact/actions";
+import { Questionnaire } from "@/components/contact/Questionnaire";
 import { Button } from "@/components/ui/Button";
 import {
   budgets,
@@ -27,6 +28,7 @@ export function ContactForm() {
   // 這兩題會決定後面出現哪些題目，所以要即時記住選了什麼
   const [spaceType, setSpaceType] = useState("");
   const [businessType, setBusinessType] = useState("");
+  const [questionnaireDone, setQuestionnaireDone] = useState(false);
 
   // 送出失敗時，把游標移到第一個有錯的欄位（手機上會自動捲過去）
   useEffect(() => {
@@ -34,6 +36,13 @@ export function ContactForm() {
     const first = formRef.current?.querySelector<HTMLElement>("[aria-invalid=true], fieldset[aria-describedby] input");
     (first ?? formRef.current?.querySelector<HTMLElement>("[role=alert]"))?.focus({ preventScroll: false });
   }, [state]);
+
+  // 住宅：基本資料存檔後接著顯示詳細問卷，填完或略過才換成感謝畫面
+  if (state.status === "success" && state.followUp && !questionnaireDone) {
+    return (
+      <Questionnaire id={state.followUp.id} token={state.followUp.token} onDone={() => setQuestionnaireDone(true)} />
+    );
+  }
 
   if (state.status === "success") {
     return (
@@ -286,7 +295,7 @@ function PrivacyNotice() {
       <ol className="mt-3 list-decimal space-y-1.5 pl-5">
         <li>蒐集者：{site.nameZh}（{site.name}）。</li>
         <li>蒐集目的：回覆您的室內設計諮詢、安排丈量與提供設計服務（客戶管理與服務）。</li>
-        <li>個人資料類別：姓名、電話、LINE ID、Email，以及您填寫的房屋與需求資訊。</li>
+        <li>個人資料類別：姓名、電話、LINE ID、Email，以及您填寫的房屋與需求資訊；若您接著填寫詳細問卷，另包含裝修地址、年齡、性別、生活習慣與您上傳的參考圖。</li>
         <li>利用期間：自蒐集日起至蒐集目的完成，或您要求刪除為止。</li>
         <li>利用地區與對象：僅限臺灣地區，由本公司人員用於聯繫與服務，不提供給第三方。</li>
         <li>您的權利：可依個人資料保護法第 3 條，來信 {site.email} 請求查詢、閱覽、製給複本、補充或更正、停止蒐集處理利用或刪除。</li>

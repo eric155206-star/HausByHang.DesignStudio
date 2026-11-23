@@ -13,7 +13,7 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps<"/a
   const { supabase } = await requireAdmin();
   let query = supabase
     .from("inquiries")
-    .select("id, name, phone, space_type, region, budget, status, notified_at, created_at")
+    .select("id, name, phone, space_type, region, budget, status, notified_at, created_at, questionnaire_at")
     .order("created_at", { ascending: false })
     .limit(200);
   if (filter) query = query.eq("status", filter);
@@ -60,6 +60,7 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps<"/a
                 <span className={cn("min-w-0 flex-1 text-[15px] text-black", q.status === "new" && "font-semibold")}>{q.name}</span>
                 <span className="text-xs text-ink-3">{[q.space_type, q.region, q.budget].join(" · ")}</span>
                 <span className="text-xs text-ink-3 tabular-nums">{formatTaipei(q.created_at)}</span>
+                {q.questionnaire_at && <span className="text-xs text-link">已填問卷</span>}
                 {!q.notified_at && <span className="text-xs text-error">通知信未寄出</span>}
                 <span className={q.status === "new" ? "text-xs text-black" : "text-xs text-ink-4"}>
                   {inquiryStatusLabel[q.status as InquiryStatus] ?? q.status}

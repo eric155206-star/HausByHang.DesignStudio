@@ -112,7 +112,8 @@ export type InquiryField = keyof z.input<typeof inquirySchema>;
 
 export type InquiryState =
   | { status: "idle" }
-  | { status: "success" }
+  /** followUp 有值代表接著要顯示詳細問卷（目前只有住宅），裡面是這筆詢問單的 id 與通行碼 */
+  | { status: "success"; followUp?: { id: string; token: string } }
   | {
       status: "error";
       message: string;
