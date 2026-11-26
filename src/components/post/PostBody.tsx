@@ -39,7 +39,8 @@ function renderNode(node: PostNode, key: number): ReactNode {
     case "text":
       return renderText(node, key);
     case "paragraph":
-      return <p key={key}>{renderNodes(node.content)}</p>;
+      // 空白段落（編輯時多按一次 Enter 留的空行）要放一個換行，不然高度是 0，發佈後空行會消失
+      return <p key={key}>{node.content?.length ? renderNodes(node.content) : <br />}</p>;
     case "heading":
       return node.attrs?.level === 3 ? (
         <h3 key={key}>{renderNodes(node.content)}</h3>

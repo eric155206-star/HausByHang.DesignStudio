@@ -192,6 +192,9 @@ export function PostEditor({ post }: { post: PostEditorValues }) {
 
       <section className="flex flex-col border border-line-strong bg-white">
         <Toolbar editor={editor} imageBusy={imageBusy} onPickImage={() => imageInput.current?.click()} />
+        <p className="border-b border-line-strong bg-surface px-4 py-2 text-xs leading-[1.7] text-ink-3">
+          按 Enter 開新的一段，按 Shift + Enter 在同一段裡換行。想把段落拉開一點，多按一次 Enter 留一個空行，發佈後也會保留。
+        </p>
         <div className="mx-auto w-full max-w-[720px] px-6 py-8">
           <EditorContent editor={editor} />
         </div>
@@ -242,6 +245,7 @@ function Toolbar({ editor, imageBusy, onPickImage }: { editor: Editor | null; im
     selector: ({ editor: e }) =>
       e
         ? {
+            paragraph: e.isActive("paragraph") && !e.isActive("bulletList") && !e.isActive("orderedList") && !e.isActive("blockquote"),
             h2: e.isActive("heading", { level: 2 }),
             h3: e.isActive("heading", { level: 3 }),
             bold: e.isActive("bold"),
@@ -283,6 +287,7 @@ function Toolbar({ editor, imageBusy, onPickImage }: { editor: Editor | null; im
       aria-label="內文格式"
       className="sticky top-0 z-10 flex flex-wrap items-center gap-1 border-b border-line-strong bg-white px-3 py-2"
     >
+      <Tool label="內文" on={active.paragraph} onClick={() => chain().clearNodes().run()} />
       <Tool label="大標題" on={active.h2} onClick={() => chain().toggleHeading({ level: 2 }).run()} />
       <Tool label="小標題" on={active.h3} onClick={() => chain().toggleHeading({ level: 3 }).run()} />
       <Divider />
