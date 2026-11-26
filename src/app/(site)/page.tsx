@@ -1,11 +1,9 @@
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { ContactCta } from "@/components/layout/ContactCta";
-import { SectionHeading } from "@/components/layout/SectionHeading";
 import { ProjectCard } from "@/components/project/ProjectCard";
-import { ButtonLink } from "@/components/ui/Button";
+import { FrameGrid, ParenLabel } from "@/components/ui/FrameCard";
 import { processSteps } from "@/content/process";
-import { categoryLabel } from "@/content/projects";
 import { getPublishedProjects } from "@/lib/data/projects";
 import { getSiteImages, type SiteImage } from "@/lib/data/site-images";
 import { services } from "@/content/services";
@@ -18,14 +16,14 @@ import { contactHref, site } from "@/lib/site";
 function HeroImage({ image }: { image: SiteImage }) {
   const className = "absolute inset-0 h-full w-full object-cover";
   if (!image.mobile) {
-    return <Image src={image.src} alt={image.alt} fill priority quality={90} sizes="(min-width: 1280px) 1152px, 100vw" className="object-cover" />;
+    return <Image src={image.src} alt={image.alt} fill priority quality={90} sizes="100vw" className="object-cover" />;
   }
   const { props: desktop } = getImageProps({
     src: image.src,
     alt: image.alt,
     width: image.width,
     height: image.height,
-    sizes: "(min-width: 1280px) 1152px, 100vw",
+    sizes: "100vw",
     quality: 90,
   });
   const { props: mobile } = getImageProps({
@@ -53,104 +51,139 @@ export default async function HomePage() {
   const featured = projects.filter((p) => p.featured).slice(0, 3);
   const heroProject = featured.find((p) => p.hero) ?? projects.find((p) => p.hero);
 
+  const info = [
+    { k: "Services", v: "住宅 · 商業空間 · 老屋翻新" },
+    { k: "Area", v: "台北 · 新北 · 桃園" },
+  ];
+  const rowClass = "flex items-center justify-between gap-6 border-b border-black py-2.5 text-[13px]";
+  const moreLink = "self-start text-xs tracking-[0.08em] text-black underline underline-offset-4 hover:no-underline";
+
   return (
-    <>
-      {/* 1. 主視覺 */}
-      {customHero ? (
-        <section className="container-page pt-[clamp(28px,4vw,48px)]">
-          <div className="relative aspect-[4/3] overflow-hidden bg-warm-gray md:aspect-[2/1]">
-            <HeroImage image={customHero} />
+    <div className="bg-surface">
+      {/* 1. 標語與基本資訊 */}
+      <section className="container-page grid gap-x-[clamp(32px,6vw,96px)] gap-y-8 pb-[clamp(28px,4vw,48px)] pt-[clamp(28px,4vw,56px)] md:grid-cols-[1.9fr_1fr] md:items-end">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-[clamp(44px,7vw,104px)] leading-[0.98] tracking-[-0.03em]">{site.tagline}</h1>
+          <p className="max-w-[22em] text-[clamp(20px,2.4vw,32px)] font-medium leading-[1.35] text-black text-pretty">
+            {site.taglineZh}設計順應生活，而非強迫生活適應設計。
+          </p>
+        </div>
+        <dl className="border-t border-black">
+          {info.map((r) => (
+            <div key={r.k} className={rowClass}>
+              <dt>
+                <ParenLabel>{r.k}</ParenLabel>
+              </dt>
+              <dd className="text-right text-black">{r.v}</dd>
+            </div>
+          ))}
+          <div className={rowClass}>
+            <dt>
+              <ParenLabel>Instagram</ParenLabel>
+            </dt>
+            <dd>
+              <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="text-black hover:underline">
+                @haus_by_hang_designstudio
+              </a>
+            </dd>
           </div>
-        </section>
+          <div className="flex items-center justify-between gap-6 py-2.5 text-[13px]">
+            <dt>
+              <ParenLabel>Contact</ParenLabel>
+            </dt>
+            <dd>
+              <Link href={contactHref} className="inline-block rounded-full bg-black px-3.5 py-1.5 text-xs text-white transition-colors hover:bg-ink">
+                預約諮詢 →
+              </Link>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      {/* 2. 滿版主視覺：後台「網站圖片」有設定時優先，否則用精選作品的主圖 */}
+      {customHero ? (
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-warm-gray md:aspect-[2/1]">
+          <HeroImage image={customHero} />
+        </div>
       ) : (
         heroProject?.hero && (
-        <section className="container-page pt-[clamp(28px,4vw,48px)]">
           <Link
             href={`/projects/${heroProject.slug}`}
             aria-label={heroProject.title}
-            className="group relative block aspect-[4/3] overflow-hidden bg-warm-gray md:aspect-[2/1]"
+            className="relative block aspect-[4/3] w-full overflow-hidden bg-warm-gray md:aspect-[2/1]"
           >
-            <Image
-              src={heroProject.hero.src}
-              alt={heroProject.hero.alt}
-              fill
-              priority
-              quality={90}
-              sizes="(min-width: 1280px) 1152px, 100vw"
-              className="object-cover transition-transform duration-[720ms] ease-brand group-hover:scale-[1.02]"
-            />
+            <Image src={heroProject.hero.src} alt={heroProject.hero.alt} fill priority quality={90} sizes="100vw" className="object-cover" />
           </Link>
-          <div className="flex justify-between gap-4 pt-3 text-xs tracking-[0.06em] text-ink-3">
-            <span>
-              {heroProject.title} · {categoryLabel[heroProject.category]}
-            </span>
-            <span>{heroProject.location}</span>
-          </div>
-        </section>
         )
       )}
 
-      {/* 2. 標語 */}
-      <section className="container-page grid gap-[clamp(32px,6vw,96px)] pb-[clamp(56px,8vw,112px)] pt-[clamp(40px,6vw,80px)] md:grid-cols-2 md:items-end">
-        <div className="flex flex-col gap-5">
-          <div className="eyebrow">沆設計 · Interior Design</div>
-          <h1 className="text-[clamp(40px,6.4vw,84px)] leading-[1.02] tracking-[-0.02em]">{site.tagline}</h1>
-          <p className="text-[clamp(20px,2.2vw,28px)] font-light tracking-[0.06em] text-black">{site.taglineZh}</p>
+      {/* 3. 理念、服務項目、設計流程 */}
+      <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
+        <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
+          <ParenLabel>About</ParenLabel>
+          <span aria-hidden className="hidden text-xs text-black md:inline">
+            ↘
+          </span>
         </div>
-        <div className="flex flex-col items-start gap-7">
-          <p className="max-w-[34em] text-base leading-[1.9] text-ink-2 text-pretty">
-            沆設計秉持形隨機能的初衷，以「設計順應生活，而非強迫生活適應設計」，在務實機能與情感溫度之間取得平衡，讓空間能隨時間流變，承載生活的軌跡。
-          </p>
-          <ButtonLink href={contactHref} size="lg" arrow>
-            預約諮詢
-          </ButtonLink>
+        <div className="flex flex-col">
+          <div className="flex flex-col gap-3 pb-9">
+            <ParenLabel>Philosophy</ParenLabel>
+            <h2 className="text-[clamp(24px,2.6vw,34px)]">形隨機能，順應生活</h2>
+            <p className="max-w-[46em] text-[14.5px] leading-[1.9] text-ink-2 text-pretty">
+              沆設計秉持形隨機能的初衷，以「設計順應生活，而非強迫生活適應設計」，在務實機能與情感溫度之間取得平衡，讓空間能隨時間流變，承載生活的軌跡。
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-black py-9">
+            <ParenLabel>Services</ParenLabel>
+            <h2 className="text-[clamp(24px,2.6vw,34px)]">服務項目</h2>
+            <div className="grid gap-x-8 gap-y-5 sm:grid-cols-3">
+              {services.map((s) => (
+                <div key={s.num} className="flex flex-col gap-1.5">
+                  <h3 className="text-base">{s.name}</h3>
+                  <p className="text-[13.5px] leading-[1.8] text-ink-2">{s.short}</p>
+                </div>
+              ))}
+            </div>
+            <Link href="/services" className={moreLink}>
+              了解更多
+            </Link>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-black pt-9">
+            <ParenLabel>Process</ParenLabel>
+            <h2 className="text-[clamp(24px,2.6vw,34px)]">設計流程</h2>
+            <ol className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
+              {processSteps.map((s) => (
+                <li key={s.num} className="flex gap-3 text-[15px] text-black">
+                  <span className="text-ink-4 tabular-nums">{s.num}</span>
+                  {s.name}
+                </li>
+              ))}
+            </ol>
+            <Link href="/process" className={moreLink}>
+              完整流程
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* 3. 精選作品 */}
+      {/* 4. 精選作品 */}
       {featured.length > 0 && (
-        <section className="container-page flex flex-col gap-9 pb-[clamp(56px,8vw,112px)]">
-          <SectionHeading title="精選作品" href="/projects" linkLabel="全部作品" />
-          <div className="grid gap-[clamp(20px,3vw,40px)] sm:grid-cols-2 lg:grid-cols-3">
+        <section className="container-page pb-[clamp(56px,8vw,112px)]">
+          <div className="flex items-baseline justify-between pb-5">
+            <h2 className="text-xs font-normal tracking-[0.04em] text-black">(Selected Works)</h2>
+            <Link href="/projects" className={moreLink}>
+              全部作品
+            </Link>
+          </div>
+          <FrameGrid>
             {featured.map((p) => (
               <ProjectCard key={p.slug} project={p} />
             ))}
-          </div>
+          </FrameGrid>
         </section>
       )}
 
-      {/* 4. 服務項目摘要 */}
-      <section className="border-t border-warm-gray py-[clamp(56px,8vw,112px)]">
-        <div className="container-page flex flex-col gap-10">
-          <SectionHeading title="服務項目" href="/services" linkLabel="了解更多" />
-          <div className="grid md:grid-cols-3">
-            {services.map((s) => (
-              <div key={s.num} className="flex flex-col gap-3 pb-2 pr-6 pt-7">
-                <div className="text-xs tracking-[0.14em] text-ink-4 tabular-nums">{s.num}</div>
-                <h3 className="text-xl">{s.name}</h3>
-                <p className="text-[14.5px] leading-[1.8] text-ink-2">{s.short}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. 設計流程摘要 */}
-      <section className="border-t border-warm-gray py-[clamp(56px,8vw,96px)]">
-        <div className="container-page flex flex-col gap-10">
-          <SectionHeading title="設計流程" href="/process" linkLabel="完整流程" />
-          <ol className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-6">
-            {processSteps.map((s) => (
-              <li key={s.num} className="flex flex-col gap-2.5 border-t-[1.5px] border-black pt-4">
-                <div className="text-xs tracking-[0.14em] text-ink-4 tabular-nums">STEP {s.num}</div>
-                <div className="text-[17px] text-black">{s.name}</div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       <ContactCta />
-    </>
+    </div>
   );
 }
