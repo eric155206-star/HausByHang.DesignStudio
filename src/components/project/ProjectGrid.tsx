@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Tag } from "@/components/ui/Tag";
 import type { Project } from "@/content/projects";
+import { FrameGrid } from "@/components/ui/FrameCard";
 import { ProjectCard } from "./ProjectCard";
 
 const filters = [
@@ -31,13 +32,13 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
       </div>
 
       {list.length > 0 ? (
-        <div className="grid gap-x-[clamp(20px,3vw,40px)] gap-y-[clamp(28px,3vw,44px)] sm:grid-cols-2 lg:grid-cols-3">
+        <FrameGrid>
           {list.map((p) => (
-            <ProjectCard key={p.slug} project={p} showArea />
+            <ProjectCard key={p.slug} project={p} />
           ))}
-        </div>
+        </FrameGrid>
       ) : (
-        <p className="bg-surface px-6 py-16 text-center text-sm text-ink-3">這個分類的作品整理中，敬請期待。</p>
+        <p className="border border-black px-6 py-16 text-center text-sm text-ink-3">這個分類的作品整理中，敬請期待。</p>
       )}
     </div>
   );
