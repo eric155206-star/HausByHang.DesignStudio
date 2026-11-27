@@ -43,7 +43,6 @@
 @utility container-page {
   margin-inline: auto;
   width: 100%;
-  max-width: 1760px;
   padding-inline: clamp(16px, 2.5vw, 36px);
 }
 

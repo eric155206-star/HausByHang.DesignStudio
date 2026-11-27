@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 /** 小標籤：括號包起來的英文小字，例如 (Selected Works)。 */
 export function ParenLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("text-base font-medium tracking-[0.02em] text-black", className)}>({children})</div>;
+  return <div className={cn("text-[clamp(16px,1.2vw,22px)] font-medium tracking-[0.02em] text-black", className)}>({children})</div>;
 }
 
 /**
@@ -36,9 +36,9 @@ export function FrameCard({
 }) {
   return (
     <Link href={href} className="group -ml-px -mt-px flex flex-col gap-4 border border-black p-[clamp(18px,2.2vw,28px)]">
-      <div className="flex min-h-[24px] items-center justify-between gap-3 text-sm font-medium text-black">
+      <div className="flex min-h-[24px] items-center justify-between gap-3 text-[clamp(15px,1.1vw,19px)] font-medium text-black">
         <span className="tabular-nums">{meta}</span>
-        {tag && <span className="rounded-full border border-black px-3 py-[3px] text-[12.5px] font-medium tracking-[0.04em]">{tag}</span>}
+        {tag && <span className="rounded-full border border-black px-3.5 py-1 text-[clamp(13px,0.95vw,16px)] font-medium tracking-[0.04em]">{tag}</span>}
       </div>
       <div className={cn("relative overflow-hidden bg-warm-gray", imageAspect)}>
         {image ? (
@@ -57,10 +57,10 @@ export function FrameCard({
         )}
       </div>
       <div className="flex flex-col gap-2">
-        <div className="text-[22px] font-semibold leading-[1.45] text-black">{title}</div>
-        {text && <p className="line-clamp-3 text-[15px] leading-[1.8] text-ink-2">{text}</p>}
+        <div className="text-[clamp(22px,1.8vw,32px)] font-semibold leading-[1.45] text-black">{title}</div>
+        {text && <p className="line-clamp-3 text-[clamp(16px,1.15vw,21px)] leading-[1.8] text-ink-2">{text}</p>}
       </div>
-      <span className="mt-auto self-start pt-2 text-[12.5px] font-semibold tracking-[0.08em] text-black underline underline-offset-4 group-hover:no-underline">
+      <span className="mt-auto self-start pt-2 text-[clamp(13px,0.95vw,16px)] font-semibold tracking-[0.08em] text-black underline underline-offset-4 group-hover:no-underline">
         READ MORE
       </span>
     </Link>

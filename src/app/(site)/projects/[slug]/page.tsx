@@ -48,15 +48,15 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <div className="grid gap-x-[clamp(32px,6vw,96px)] gap-y-8 md:grid-cols-[1.9fr_1fr] md:items-end">
           <div className="flex flex-col gap-4">
             {project.eyebrow && <div className="eyebrow">{project.eyebrow}</div>}
-            <h1 className="text-[clamp(40px,6.4vw,92px)] leading-[1.05] tracking-[-0.01em]">{project.title}</h1>
+            <h1 className="text-[clamp(40px,6.4vw,150px)] leading-[1.05] tracking-[-0.01em]">{project.title}</h1>
             {project.summary && (
-              <p className="max-w-[24em] text-[clamp(18px,2.1vw,28px)] font-medium leading-[1.45] text-black text-pretty">{project.summary}</p>
+              <p className="max-w-[24em] text-[clamp(18px,2.1vw,44px)] font-medium leading-[1.45] text-black text-pretty">{project.summary}</p>
             )}
           </div>
           <dl className="border-t border-black">
             {meta.map((m) => (
-              <div key={m.k} className="flex items-center justify-between gap-6 border-b border-black py-3 text-base font-medium last:border-b-0">
-                <dt className="text-base font-medium tracking-[0.02em] text-black">({m.k})</dt>
+              <div key={m.k} className="flex items-center justify-between gap-6 border-b border-black py-[0.8em] text-[clamp(16px,1.2vw,22px)] font-medium last:border-b-0">
+                <dt className="tracking-[0.02em] text-black">({m.k})</dt>
                 <dd className="text-right text-black">{m.v}</dd>
               </div>
             ))}
@@ -74,13 +74,13 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
           <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
             <ParenLabel>Details</ParenLabel>
-            <span aria-hidden className="hidden text-[26px] leading-none text-black md:inline">
+            <span aria-hidden className="hidden text-[clamp(26px,2.2vw,44px)] leading-none text-black md:inline">
               ↘
             </span>
           </div>
           <div className="flex flex-col gap-3">
             <ParenLabel>About the project</ParenLabel>
-            <p className="max-w-[40em] whitespace-pre-line text-[clamp(16px,1.6vw,19px)] leading-[1.95] text-ink text-pretty">{project.description}</p>
+            <p className="max-w-[40em] whitespace-pre-line text-[clamp(17px,1.4vw,24px)] leading-[1.95] text-ink text-pretty">{project.description}</p>
           </div>
         </section>
       )}
