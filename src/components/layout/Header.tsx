@@ -15,7 +15,7 @@ const pill =
   "inline-flex h-10 items-center justify-center rounded-full border border-black px-5 text-[15px] font-medium leading-none tracking-[0.02em] transition-colors duration-150";
 
 /**
- * 沒有橫條的導覽：右上角固定兩顆膠囊按鈕（首頁、Menu），Menu 打開後是選單面板。
+ * 沒有橫條的導覽：右上角固定一顆 Menu 膠囊按鈕，打開後是選單面板；回首頁點左上角 LOGO 或選單裡的「首頁」。
  */
 export function Header() {
   const pathname = usePathname();
@@ -49,9 +49,6 @@ export function Header() {
 
       {/* 右上角固定按鈕 */}
       <div className={cn("pointer-events-none fixed right-0 top-0 z-[60] flex h-[84px] items-center gap-2 md:h-[96px]", gutter)}>
-        <Link href="/" onClick={close} className={cn(pill, "pointer-events-auto bg-surface text-black hover:bg-surface-hover")}>
-          首頁
-        </Link>
         <button
           type="button"
           aria-expanded={menuOpen}
