@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 export default async function Page() {
   const projects = await getPublishedProjects();
   return (
-    <>
+    <div className="bg-surface">
       <PageHeader eyebrow="Works" title="作品集" />
       <section className="container-page pb-[clamp(56px,8vw,112px)]">
         <ProjectGrid projects={projects} />
       </section>
       <ContactCta />
-    </>
+    </div>
   );
 }

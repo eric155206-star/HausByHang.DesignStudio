@@ -11,7 +11,7 @@ const contactInfo: Array<{ label: string; href?: string }> = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-warm-gray bg-white px-[clamp(20px,5vw,64px)] pb-10 pt-[clamp(48px,8vw,96px)] text-black">
+    <footer className="border-t border-warm-gray bg-white px-[clamp(16px,2.5vw,36px)] pb-10 pt-[clamp(48px,8vw,96px)] text-black">
       <div className="flex flex-col gap-14">
         <div className="flex flex-wrap items-start justify-between gap-12">
           <div className="flex max-w-[380px] flex-col gap-5">
