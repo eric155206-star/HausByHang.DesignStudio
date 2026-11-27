@@ -97,7 +97,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                 width={img.width}
                 height={img.height}
                 quality={90}
-                sizes="(min-width: 1280px) 576px, (min-width: 640px) 50vw, 100vw"
+                sizes="(min-width: 640px) 50vw, 100vw"
                 className="mb-[clamp(16px,2vw,28px)] block h-auto w-full break-inside-avoid bg-warm-gray"
               />
             ))}
