@@ -63,9 +63,15 @@ export default async function HomePage() {
       {/* 1. 標語與基本資訊 */}
       <section className="container-page grid gap-x-[clamp(32px,6vw,96px)] gap-y-8 pb-[clamp(28px,4vw,48px)] pt-[clamp(8px,2vw,24px)] md:grid-cols-[1.9fr_1fr] md:items-end">
         <div className="flex flex-col gap-4">
-          <h1 className="text-[clamp(44px,7vw,168px)] leading-[0.98] tracking-[-0.03em]">{site.tagline}</h1>
-          <p className="max-w-[22em] text-[clamp(20px,2.4vw,52px)] font-medium leading-[1.35] text-black text-pretty">
-            {site.taglineZh}設計順應生活，而非強迫生活適應設計。
+          <h1 className="text-[clamp(38px,5.4vw,130px)] leading-[1.02] tracking-[-0.03em]">
+            Design the Flow
+            <br />
+            of Living
+          </h1>
+          <p className="text-[clamp(17px,1.85vw,40px)] font-medium leading-[1.45] text-black">
+            以設計，形塑生活的流變
+            <br />
+            設計順應生活，而非強迫生活適應設計
           </p>
         </div>
         <dl className="border-t border-black">
