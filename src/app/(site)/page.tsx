@@ -55,8 +55,8 @@ export default async function HomePage() {
     { k: "Services", v: "住宅 · 商業空間 · 老屋翻新" },
     { k: "Area", v: "台北 · 新北 · 桃園" },
   ];
-  const rowClass = "flex items-center justify-between gap-6 border-b border-black py-3 text-[15px] font-medium";
-  const moreLink = "self-start text-[13.5px] font-medium tracking-[0.06em] text-black underline underline-offset-4 hover:no-underline";
+  const rowClass = "flex items-center justify-between gap-6 border-b border-black py-3 text-base font-medium";
+  const moreLink = "self-start text-[15px] font-medium tracking-[0.06em] text-black underline underline-offset-4 hover:no-underline";
 
   return (
     <div className="bg-surface">
@@ -87,7 +87,7 @@ export default async function HomePage() {
               </a>
             </dd>
           </div>
-          <div className="flex items-center justify-between gap-6 py-3 text-[15px] font-medium">
+          <div className="flex items-center justify-between gap-6 py-3 text-base font-medium">
             <dt>
               <ParenLabel>Contact</ParenLabel>
             </dt>
@@ -121,7 +121,7 @@ export default async function HomePage() {
       <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
         <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
           <ParenLabel>About</ParenLabel>
-          <span aria-hidden className="hidden text-sm text-black md:inline">
+          <span aria-hidden className="hidden text-base text-black md:inline">
             ↘
           </span>
         </div>
@@ -170,7 +170,7 @@ export default async function HomePage() {
       {featured.length > 0 && (
         <section className="container-page pb-[clamp(56px,8vw,112px)]">
           <div className="flex items-baseline justify-between pb-5">
-            <h2 className="text-[13.5px] font-medium tracking-[0.03em] text-black">(Selected Works)</h2>
+            <h2 className="text-base font-medium tracking-[0.02em] text-black">(Selected Works)</h2>
             <Link href="/projects" className={moreLink}>
               全部作品
             </Link>

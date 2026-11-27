@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 
 /** 小標籤：括號包起來的英文小字，例如 (Selected Works)。 */
 export function ParenLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("text-[13.5px] font-medium tracking-[0.03em] text-black", className)}>({children})</div>;
+  return <div className={cn("text-base font-medium tracking-[0.02em] text-black", className)}>({children})</div>;
 }
 
 /**
