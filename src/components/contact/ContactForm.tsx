@@ -1,19 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useRef, type ReactNode } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { submitInquiry } from "@/app/(site)/contact/actions";
+import { Questionnaire } from "@/components/contact/Questionnaire";
 import { Button } from "@/components/ui/Button";
 import {
   budgets,
-  houseConditions,
-  houseTypes,
+  businessTypes,
+  regions,
+  houseConditionsFor,
+  houseTypesFor,
   spaceTypes,
   type InquiryField,
   type InquiryState,
 } from "@/lib/inquiry";
 import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
+import logo from "../../../public/brand/logo-bilingual.png";
 
 const inputClass =
   "w-full rounded-[4px] border border-line-strong bg-white px-3.5 py-2.5 text-[15px] text-black placeholder:text-ink-4 transition-colors focus:border-black focus:outline-none aria-[invalid=true]:border-error";
@@ -21,6 +25,10 @@ const inputClass =
 export function ContactForm() {
   const [state, action, pending] = useActionState<InquiryState, FormData>(submitInquiry, { status: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
+  // 這兩題會決定後面出現哪些題目，所以要即時記住選了什麼
+  const [spaceType, setSpaceType] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [questionnaireDone, setQuestionnaireDone] = useState(false);
 
   // 送出失敗時，把游標移到第一個有錯的欄位（手機上會自動捲過去）
   useEffect(() => {
@@ -29,15 +37,19 @@ export function ContactForm() {
     (first ?? formRef.current?.querySelector<HTMLElement>("[role=alert]"))?.focus({ preventScroll: false });
   }, [state]);
 
+  // 住宅：基本資料存檔後接著顯示詳細問卷，填完或略過才換成感謝畫面
+  if (state.status === "success" && state.followUp && !questionnaireDone) {
+    return (
+      <Questionnaire id={state.followUp.id} token={state.followUp.token} onDone={() => setQuestionnaireDone(true)} />
+    );
+  }
+
   if (state.status === "success") {
     return (
       <div role="status" className="flex flex-col items-start gap-5 py-6">
-        <Image src="/brand/mark.png" alt="" width={44} height={44} />
+        <Image src={logo} alt="沆・設計 haus by hang." style={{ height: 44, width: "auto", maxWidth: "none" }} sizes="140px" />
         <h2 className="text-2xl">謝謝您的來信</h2>
         <p className="text-[15px] leading-[1.9] text-ink-2">我們會在兩個工作天內與您聯繫。</p>
-        <Button variant="secondary" onClick={() => window.location.reload()}>
-          再填一份
-        </Button>
       </div>
     );
   }
@@ -81,28 +93,78 @@ export function ContactForm() {
         </Field>
       </div>
 
-      <ChoiceGroup label="空間類型" required name="spaceType" options={spaceTypes} value={val.spaceType} error={err.spaceType} />
-      <ChoiceGroup label="房屋現況" required name="houseCondition" options={houseConditions} value={val.houseCondition} error={err.houseCondition} />
+      <ChoiceGroup
+        label="空間類型"
+        required
+        name="spaceType"
+        options={spaceTypes}
+        value={spaceType}
+        error={err.spaceType}
+        onSelect={(v) => {
+          setSpaceType(v);
+          setBusinessType("");
+        }}
+      />
+
+      {spaceType === "商業空間" && (
+        <>
+          <ChoiceGroup
+            label="營業類型"
+            required
+            name="businessType"
+            options={businessTypes}
+            value={businessType}
+            error={err.businessType}
+            onSelect={setBusinessType}
+          />
+          {businessType === "其他" && (
+            <Field label="請填寫營業類型" required name="businessTypeOther" error={err.businessTypeOther}>
+              <input {...field("businessTypeOther")} placeholder="例如 美容工作室" className={inputClass} />
+            </Field>
+          )}
+        </>
+      )}
+
+      {/* 選了空間類型才出現；key 讓切換類型時重新開始，不會留著另一類的選項 */}
+      {spaceType && (
+        <ChoiceGroup
+          key={spaceType}
+          label="房屋現況"
+          required
+          name="houseCondition"
+          options={houseConditionsFor(spaceType)}
+          value={val.spaceType === spaceType ? val.houseCondition : undefined}
+          error={err.houseCondition}
+        />
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="房屋類型" name="houseType" error={err.houseType}>
-          <select {...field("houseType")} className={inputClass}>
-            <option value="">請選擇</option>
-            {houseTypes.map((o) => (
-              <option key={o}>{o}</option>
-            ))}
-          </select>
-        </Field>
-        <Field label="屋齡（年）" name="houseAge" error={err.houseAge}>
-          <input {...field("houseAge")} inputMode="numeric" className={inputClass} />
-        </Field>
-        <Field label="地區" required name="region" error={err.region}>
-          <input {...field("region")} placeholder="例如 新北 板橋" className={inputClass} />
-        </Field>
+        {spaceType && (
+          <>
+            <Field label="房屋類型" name="houseType" error={err.houseType}>
+              <select
+                {...field("houseType")}
+                key={spaceType}
+                defaultValue={val.spaceType === spaceType ? val.houseType ?? "" : ""}
+                className={inputClass}
+              >
+                <option value="">請選擇</option>
+                {houseTypesFor(spaceType).map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="屋齡（年）" name="houseAge" error={err.houseAge}>
+              <input {...field("houseAge")} inputMode="numeric" className={inputClass} />
+            </Field>
+          </>
+        )}
         <Field label="約略坪數" name="area" error={err.area}>
           <input {...field("area")} inputMode="decimal" className={inputClass} />
         </Field>
       </div>
+
+      <ChoiceGroup label="地區" required name="region" options={regions} value={val.region} error={err.region} />
 
       <ChoiceGroup label="預算區間" required name="budget" options={budgets} value={val.budget} error={err.budget} hint="含設計與工程" />
 
@@ -181,6 +243,7 @@ function ChoiceGroup({
   required,
   error,
   hint,
+  onSelect,
 }: {
   label: string;
   name: InquiryField;
@@ -189,6 +252,7 @@ function ChoiceGroup({
   required?: boolean;
   error?: string;
   hint?: string;
+  onSelect?: (value: string) => void;
 }) {
   return (
     <fieldset className="flex flex-col gap-2.5" aria-describedby={error ? `e-${name}` : undefined}>
@@ -200,7 +264,10 @@ function ChoiceGroup({
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
           <label key={o} className="cursor-pointer">
-            <input type="radio" name={name} value={o} defaultChecked={value === o} className="peer sr-only" />
+            <input type="radio" name={name} value={o} defaultChecked={value === o}
+              onChange={onSelect && (() => onSelect(o))}
+              className="peer sr-only"
+            />
             <span className="inline-flex rounded-full border border-line-strong px-3.5 py-1.5 text-[13.5px] text-ink transition-colors hover:border-ink-3 peer-checked:border-black peer-checked:bg-black peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-link">
               {o}
             </span>
@@ -228,7 +295,7 @@ function PrivacyNotice() {
       <ol className="mt-3 list-decimal space-y-1.5 pl-5">
         <li>蒐集者：{site.nameZh}（{site.name}）。</li>
         <li>蒐集目的：回覆您的室內設計諮詢、安排丈量與提供設計服務（客戶管理與服務）。</li>
-        <li>個人資料類別：姓名、電話、LINE ID、Email，以及您填寫的房屋與需求資訊。</li>
+        <li>個人資料類別：姓名、電話、LINE ID、Email，以及您填寫的房屋與需求資訊；若您接著填寫詳細問卷，另包含裝修地址、年齡、性別、生活習慣與您上傳的參考圖。</li>
         <li>利用期間：自蒐集日起至蒐集目的完成，或您要求刪除為止。</li>
         <li>利用地區與對象：僅限臺灣地區，由本公司人員用於聯繫與服務，不提供給第三方。</li>
         <li>您的權利：可依個人資料保護法第 3 條，來信 {site.email} 請求查詢、閱覽、製給複本、補充或更正、停止蒐集處理利用或刪除。</li>

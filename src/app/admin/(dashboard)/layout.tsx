@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { InquiryBadge } from "@/components/admin/InquiryBadge";
 import { signOut } from "../login/actions";
 
 /** 登入後的後台頂欄與內容區。 */
@@ -15,6 +16,12 @@ export default function DashboardLayout({ children }: LayoutProps<"/admin">) {
             <nav className="flex gap-4 text-ink-2">
               <Link href="/admin/projects" className="hover:text-black">
                 作品
+              </Link>
+              <Link href="/admin/inquiries" className="flex items-center hover:text-black">
+                詢問單
+                <Suspense fallback={null}>
+                  <InquiryBadge />
+                </Suspense>
               </Link>
               <Link href="/admin/posts" className="hover:text-black">
                 文章
