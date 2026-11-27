@@ -74,7 +74,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
           <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
             <ParenLabel>Details</ParenLabel>
-            <span aria-hidden className="hidden text-base text-black md:inline">
+            <span aria-hidden className="hidden text-[26px] leading-none text-black md:inline">
               ↘
             </span>
           </div>
