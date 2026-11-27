@@ -4,10 +4,10 @@ import { Header } from "@/components/layout/Header";
 /** 前台共用版型：Header ＋ 內容 ＋ Footer。後台 /admin 不套用。 */
 export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
-    <>
+    <div className="flex flex-1 flex-col bg-surface">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
-    </>
+    </div>
   );
 }

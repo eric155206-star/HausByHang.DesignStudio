@@ -55,13 +55,13 @@ export default async function HomePage() {
     { k: "Services", v: "住宅 · 商業空間 · 老屋翻新" },
     { k: "Area", v: "台北 · 新北 · 桃園" },
   ];
-  const rowClass = "flex items-center justify-between gap-6 border-b border-black py-2.5 text-[13px]";
-  const moreLink = "self-start text-xs tracking-[0.08em] text-black underline underline-offset-4 hover:no-underline";
+  const rowClass = "flex items-center justify-between gap-6 border-b border-black py-3 text-[15px] font-medium";
+  const moreLink = "self-start text-[13.5px] font-medium tracking-[0.06em] text-black underline underline-offset-4 hover:no-underline";
 
   return (
     <div className="bg-surface">
       {/* 1. 標語與基本資訊 */}
-      <section className="container-page grid gap-x-[clamp(32px,6vw,96px)] gap-y-8 pb-[clamp(28px,4vw,48px)] pt-[clamp(28px,4vw,56px)] md:grid-cols-[1.9fr_1fr] md:items-end">
+      <section className="container-page grid gap-x-[clamp(32px,6vw,96px)] gap-y-8 pb-[clamp(28px,4vw,48px)] pt-[clamp(8px,2vw,24px)] md:grid-cols-[1.9fr_1fr] md:items-end">
         <div className="flex flex-col gap-4">
           <h1 className="text-[clamp(44px,7vw,104px)] leading-[0.98] tracking-[-0.03em]">{site.tagline}</h1>
           <p className="max-w-[22em] text-[clamp(20px,2.4vw,32px)] font-medium leading-[1.35] text-black text-pretty">
@@ -87,12 +87,12 @@ export default async function HomePage() {
               </a>
             </dd>
           </div>
-          <div className="flex items-center justify-between gap-6 py-2.5 text-[13px]">
+          <div className="flex items-center justify-between gap-6 py-3 text-[15px] font-medium">
             <dt>
               <ParenLabel>Contact</ParenLabel>
             </dt>
             <dd>
-              <Link href={contactHref} className="inline-block rounded-full bg-black px-3.5 py-1.5 text-xs text-white transition-colors hover:bg-ink">
+              <Link href={contactHref} className="inline-block rounded-full bg-black px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-ink">
                 預約諮詢 →
               </Link>
             </dd>
@@ -121,7 +121,7 @@ export default async function HomePage() {
       <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
         <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
           <ParenLabel>About</ParenLabel>
-          <span aria-hidden className="hidden text-xs text-black md:inline">
+          <span aria-hidden className="hidden text-sm text-black md:inline">
             ↘
           </span>
         </div>
@@ -129,7 +129,7 @@ export default async function HomePage() {
           <div className="flex flex-col gap-3 pb-9">
             <ParenLabel>Philosophy</ParenLabel>
             <h2 className="text-[clamp(24px,2.6vw,34px)]">形隨機能，順應生活</h2>
-            <p className="max-w-[46em] text-[14.5px] leading-[1.9] text-ink-2 text-pretty">
+            <p className="max-w-[46em] text-base leading-[1.9] text-ink-2 text-pretty">
               沆設計秉持形隨機能的初衷，以「設計順應生活，而非強迫生活適應設計」，在務實機能與情感溫度之間取得平衡，讓空間能隨時間流變，承載生活的軌跡。
             </p>
           </div>
@@ -139,8 +139,8 @@ export default async function HomePage() {
             <div className="grid gap-x-8 gap-y-5 sm:grid-cols-3">
               {services.map((s) => (
                 <div key={s.num} className="flex flex-col gap-1.5">
-                  <h3 className="text-base">{s.name}</h3>
-                  <p className="text-[13.5px] leading-[1.8] text-ink-2">{s.short}</p>
+                  <h3 className="text-[17px]">{s.name}</h3>
+                  <p className="text-[15px] leading-[1.8] text-ink-2">{s.short}</p>
                 </div>
               ))}
             </div>
@@ -153,7 +153,7 @@ export default async function HomePage() {
             <h2 className="text-[clamp(24px,2.6vw,34px)]">設計流程</h2>
             <ol className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
               {processSteps.map((s) => (
-                <li key={s.num} className="flex gap-3 text-[15px] text-black">
+                <li key={s.num} className="flex gap-3 text-base font-medium text-black">
                   <span className="text-ink-4 tabular-nums">{s.num}</span>
                   {s.name}
                 </li>
@@ -170,7 +170,7 @@ export default async function HomePage() {
       {featured.length > 0 && (
         <section className="container-page pb-[clamp(56px,8vw,112px)]">
           <div className="flex items-baseline justify-between pb-5">
-            <h2 className="text-xs font-normal tracking-[0.04em] text-black">(Selected Works)</h2>
+            <h2 className="text-[13.5px] font-medium tracking-[0.03em] text-black">(Selected Works)</h2>
             <Link href="/projects" className={moreLink}>
               全部作品
             </Link>

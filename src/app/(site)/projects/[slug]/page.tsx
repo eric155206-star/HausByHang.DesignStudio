@@ -41,7 +41,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
   return (
     <div className="bg-surface">
-      <section className="container-page flex flex-col gap-6 pb-[clamp(28px,4vw,48px)] pt-[clamp(28px,4vw,48px)]">
+      <section className="container-page flex flex-col gap-6 pb-[clamp(28px,4vw,48px)] pt-[clamp(8px,2vw,24px)]">
         <Link href="/projects" className="self-start text-sm font-medium text-link hover:underline">
           ← 作品集
         </Link>
@@ -55,8 +55,8 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </div>
           <dl className="border-t border-black">
             {meta.map((m) => (
-              <div key={m.k} className="flex items-center justify-between gap-6 border-b border-black py-2.5 text-[13px] last:border-b-0">
-                <dt className="text-xs tracking-[0.04em] text-black">({m.k})</dt>
+              <div key={m.k} className="flex items-center justify-between gap-6 border-b border-black py-3 text-[15px] font-medium last:border-b-0">
+                <dt className="text-[13.5px] tracking-[0.03em] text-black">({m.k})</dt>
                 <dd className="text-right text-black">{m.v}</dd>
               </div>
             ))}
@@ -74,7 +74,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <section className="container-page grid gap-x-10 gap-y-6 py-[clamp(40px,6vw,80px)] md:grid-cols-[1fr_2.2fr]">
           <div className="flex items-start justify-between md:border-r md:border-black md:pr-6">
             <ParenLabel>Details</ParenLabel>
-            <span aria-hidden className="hidden text-xs text-black md:inline">
+            <span aria-hidden className="hidden text-sm text-black md:inline">
               ↘
             </span>
           </div>
